@@ -19,6 +19,7 @@ class FollowViewSet(viewsets.ModelViewSet):
 
         user = request.user
         user.following.add(follow_target)
+        follow_target.followers.add(user)
         user.save()
 
         return Response(status=status.HTTP_201_CREATED)
@@ -29,6 +30,7 @@ class FollowViewSet(viewsets.ModelViewSet):
 
         user = request.user
         user.following.remove(unfollow_target)
+        unfollow_target.followers.remove(user)
         user.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT)

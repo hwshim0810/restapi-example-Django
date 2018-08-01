@@ -65,6 +65,8 @@ INSTALLED_APPS = [
     'rest_auth',
     'rest_auth.registration',
 
+    'polymorphic',
+
     # ## Project apps ##
     'users',
     'utility',

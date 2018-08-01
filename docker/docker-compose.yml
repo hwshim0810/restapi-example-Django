@@ -1,0 +1,51 @@
+version: '2.1'
+
+volumes:
+  django_db: {}
+  python_packages: {}
+
+services:
+  nginx:
+    restart: always
+    build: nginx
+    container_name: Nginx
+    ports:
+      - '80:80'
+    depends_on:
+      - django
+    volumes:
+      - ./log:/var/log/nginx
+    volumes_from:
+      - django
+
+  django:
+    build:
+      context: ../
+      dockerfile: ./docker/prod/Dockerfile
+    restart: always
+    env_file:
+      - ./prod/docker.env
+    expose:
+      - "8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - python_packages:/usr/local/lib/python3.6/site-packages
+      - ../:/app
+
+  db:
+    image: postgres:10
+    ports:
+      - "5432"
+    env_file:
+      - ./prod/docker.env
+    volumes:
+      - django_db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8
+    healthcheck:
+      test: "pg_isready -h localhost -p 5432 -U postgres"
+      interval: 3s
+      timeout: 1s
+      retries: 10

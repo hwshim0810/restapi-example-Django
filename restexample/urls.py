@@ -26,5 +26,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # Apps
-    path('users/', include(('apps.users.urls', 'users'), namespace='users'))
+    path('users/', include(('apps.users.urls', 'users'), namespace='users')),
+    path('feeds/', include(('apps.feeds.urls', 'feeds'), namespace='feeds')),
 ]

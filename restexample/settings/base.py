@@ -68,7 +68,7 @@ INSTALLED_APPS = [
     # ## Project apps ##
     'users',
     'utility',
-    'posts',
+    'feeds',
 ]
 
 MIDDLEWARE = [

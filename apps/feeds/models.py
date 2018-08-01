@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.cache import cache
 from django.contrib.auth import get_user_model
 
 from polymorphic.models import PolymorphicModel
@@ -9,6 +10,10 @@ from utility.models import UpdatedAtModel
 class Content(PolymorphicModel, UpdatedAtModel):
 
     user = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
+
+    def save(self, *args, **kwargs):
+        cache.delete('feeds')
+        super().save(*args, **kwargs)
 
 
 class Post(Content):

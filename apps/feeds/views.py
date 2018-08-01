@@ -3,6 +3,8 @@ from rest_framework import filters
 from rest_framework import status
 from rest_framework.response import Response
 
+from django.core.cache import cache
+
 from feeds import models
 from feeds import serializers
 
@@ -13,6 +15,16 @@ class FeedViewSet(viewsets.ModelViewSet):
     queryset = models.Content.objects.all()
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = ('-updated_at', '-created_at')
+
+    def list(self, request, *args, **kwargs):
+        feeds = cache.get('feeds')
+
+        if not feeds:
+            response = super().list(request, *args, **kwargs)
+            cache.set('feeds', response.data)
+            return response
+
+        return Response(status=status.HTTP_200_OK, data=feeds)
 
     def get_queryset(self):
         return super().get_queryset().filter(

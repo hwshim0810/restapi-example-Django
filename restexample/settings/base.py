@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'rest_auth.registration',
 
     # ## Project apps ##
+    'users',
 ]
 
 MIDDLEWARE = [

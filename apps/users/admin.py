@@ -29,6 +29,8 @@ class UserAdmin(admin.ModelAdmin):
                 'email',
                 'name',
                 'job',
+                'followers',
+                'following',
             )
         }),
         ('Permissions', {

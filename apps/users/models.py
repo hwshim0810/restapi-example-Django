@@ -62,11 +62,15 @@ class User(PermissionsMixin, CreateAtModel, AbstractBaseUser):
     )
     followers = models.ManyToManyField(
         "self",
-        blank=True
+        blank=True,
+        symmetrical=False,
+        related_name='follow_users',
     )
     following = models.ManyToManyField(
         "self",
-        blank=True
+        blank=True,
+        symmetrical=False,
+        related_name='following_users',
     )
     is_staff = models.BooleanField(
         default=False,

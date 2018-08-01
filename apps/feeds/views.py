@@ -3,7 +3,9 @@ from rest_framework import filters
 from rest_framework import status
 from rest_framework.response import Response
 
+from django.db.models import Q
 from django.core.cache import cache
+from django.db.utils import ProgrammingError
 
 from feeds import models
 from feeds import serializers
@@ -28,7 +30,8 @@ class FeedViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return super().get_queryset().filter(
-            user__in=self.request.user.following.all()
+            Q(user__in=self.request.user.following.all()) |
+            Q(user=self.request.user)
         )
 
 
@@ -46,15 +49,20 @@ class ContentViewSet(viewsets.ModelViewSet):
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    def get_queryset(self):
+        try:
+            return super().get_queryset().instance_of(self.serializer_class.Meta.model)
+        except ProgrammingError:
+            pass
+
 
 class PostViewSet(ContentViewSet):
 
     serializer_class = serializers.PostSerializer
-    queryset = models.Content.objects.instance_of(models.Post)
 
 
 class ImageViewSet(ContentViewSet):
 
     serializer_class = serializers.ImageSerializer
-    queryset = models.Content.objects.instance_of(models.Image)
+    model = models.Image
 

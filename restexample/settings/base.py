@@ -26,13 +26,13 @@ APPS_DIR = ROOT_DIR.path('apps')
 COLLECT_ROOT = ROOT_DIR.path('dist')
 
 # Static root
-STATIC_ROOT = COLLECT_ROOT.path('static')
+STATIC_ROOT = str(COLLECT_ROOT.path('static'))
 
 # Media root
-MEDIA_ROOT = COLLECT_ROOT.path('media')
+MEDIA_ROOT = str(COLLECT_ROOT.path('media'))
 
 # Append app dir
-sys.path.append(os.path.normpath(APPS_DIR))
+sys.path.append(os.path.normpath(str(APPS_DIR)))
 
 # ##### STATIC CONFIGURATION ################################
 
